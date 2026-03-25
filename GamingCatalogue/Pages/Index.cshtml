@@ -1,0 +1,56 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Каталог игр";
+}
+
+<div class="white-panel">
+    <h1 class="text-center mb-4">Каталог игр</h1>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var game in Model.Games)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+                    <img src="@game.ImageUrl" class="card-img-top" alt="@game.Title" style="height: 200px; object-fit: cover;">
+                    
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">@game.Title</h5>
+                            <span class="badge bg-dark">@game.Year</span>
+                        </div>
+                        
+                        <p class="card-text text-muted" style="font-size: 0.9rem;">
+                            @if (game.Description.Length > 100)
+                            {
+                                @(game.Description.Substring(0, 100) + "...")
+                            }
+                            else
+                            {
+                                @game.Description
+                            }
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <div class="d-flex justify-content-around text-center border-top pt-2" style="font-size: 0.8rem;">
+                            <div>
+                                <strong>Геймплей</strong><br />@game.GameplayScore
+                            </div>
+                            <div>
+                                <strong>Графика</strong><br />@game.GraphicsScore
+                            </div>
+                            <div>
+                                <strong>Сюжет</strong><br />@game.StoryScore
+                            </div>
+                                                        <div>
+                                <strong>Музыка</strong><br />@game.MusicScore
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-outline-success w-100 mt-3">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

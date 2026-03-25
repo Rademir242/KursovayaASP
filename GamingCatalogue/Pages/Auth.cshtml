@@ -1,0 +1,98 @@
+﻿@page
+@model GamingCatalogue.Pages.AuthModel
+@{
+    ViewData["Title"] = "Авторизация";
+}
+@if (!string.IsNullOrEmpty(Model.GeneralError))
+{
+    <div style="background-color:#f44336; color:white; padding:10px; margin-bottom:15px; border-radius:5px;">
+        @Html.Raw(Model.GeneralError)
+    </div>
+}
+<div class="auth-container">
+    <div class="auth-box">
+        <div class="auth-header">
+            <h1>GamingCatalogue</h1>
+            <p>Добро пожаловать обратно!</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="tab-btn active" onclick="showLogin()">Вход</button>
+            <button class="tab-btn" onclick="showRegister()">Регистрация</button>
+        </div>
+
+        <!-- ВХОД -->
+        <form method="post" asp-page-handler="Login" id="loginForm" class="auth-form">
+            <h2>Вход в аккаунт</h2>
+
+            <div class="input-group">
+                <input asp-for="Login" class="dark-input" placeholder="Логин" autocomplete="username" />
+                <span asp-validation-for="Login" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <input asp-for="Password" type="password" class="dark-input" placeholder="Пароль" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+
+            <button type="submit" class="auth-btn">Войти</button>
+        </form>
+
+        <!-- РЕГИСТРАЦИЯ -->
+        <form method="post" asp-page-handler="Register" id="registerForm" class="auth-form hidden">
+            <h2>Создать аккаунт</h2>
+
+            <div class="input-group">
+                <input asp-for="RegLogin" class="dark-input" placeholder="Логин" autocomplete="username" />
+                <span asp-validation-for="RegLogin" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <input asp-for="RegPassword" type="password" class="dark-input" placeholder="Пароль" autocomplete="new-password" />
+                <span asp-validation-for="RegPassword" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <input asp-for="RegPassword2" type="password" class="dark-input" placeholder="Подтвердите пароль" autocomplete="new-password" />
+                <span asp-validation-for="RegPassword2" class="field-error"></span>
+            </div>
+
+            <button type="submit" class="auth-btn">Создать аккаунт</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        function showLogin() {
+            document.getElementById("loginForm").classList.remove("hidden");
+            document.getElementById("registerForm").classList.add("hidden");
+
+            document.querySelectorAll(".tab-btn")[0].classList.add("active");
+            document.querySelectorAll(".tab-btn")[1].classList.remove("active");
+        }
+
+        function showRegister() {
+            document.getElementById("loginForm").classList.add("hidden");
+            document.getElementById("registerForm").classList.remove("hidden");
+
+            document.querySelectorAll(".tab-btn")[0].classList.remove("active");
+            document.querySelectorAll(".tab-btn")[1].classList.add("active");
+        }
+
+        document.addEventListener("DOMContentLoaded", function(){
+            @if (Model.IsRegisterTab)
+            {
+                    <text>showRegister();</text>
+            }
+            else
+            {
+                    <text>showLogin();</text>
+            }
+        });
+    </script>
+}

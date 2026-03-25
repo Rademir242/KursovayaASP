@@ -1,0 +1,89 @@
+﻿@page
+@model ProfileModel
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="profile-page">
+
+    <div class="profile-card">
+        <div class="profile-header-row">
+
+            <div class="profile-main">
+                <div class="avatar-circle">
+                    <span>
+                        @if (Model.IsAuthenticated)
+                        {
+                            @Model.Username.Substring(0, 1).ToUpper()
+                        }
+                        else
+                        {
+                            @("G")
+                        }
+                    </span>
+                </div>
+                <div class="profile-info">
+                    <h1 class="profile-name">
+                        @if (Model.IsAuthenticated)
+                        {
+                            @Model.Username
+                        }
+                        else
+                        {
+                            @("Guest")
+                        }
+                    </h1>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="profile-body">
+            @if (Model.IsAuthenticated)
+            {
+                <h2>Информация профиля</h2>
+                <p>Здесь можно будет отображать статистику по играм, достижения, избранное и т.д.</p>
+
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <span class="stat-label">Игры в библиотеке</span>
+                        <span class="stat-value">12</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Достижения</span>
+                        <span class="stat-value">34</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Проведено часов</span>
+                        <span class="stat-value">128</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <h2>Гость</h2>
+                <p>Войдите в аккаунт, чтобы увидеть свою библиотеку, достижения и персональные рекомендации.</p>
+            }
+        </div>
+    </div>
+
+</div>
+@section Scripts {
+    <script>
+
+        const toggleBtn = document.getElementById('profileMenuToggle');
+        const menu = document.getElementById('profileMenu');
+
+        if (toggleBtn && menu) {
+            toggleBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                menu.classList.toggle('open');
+            });
+
+            document.addEventListener('click', function () {
+                menu.classList.remove('open');
+            });
+        }
+    </script>
+}
