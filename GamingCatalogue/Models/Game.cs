@@ -13,6 +13,7 @@ public class Game
         public double MusicScore { get; set; }
 
 
-        public string ImageUrl { get; set; } 
+        public string ImageUrl { get; set; }
+        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
     }
 }
