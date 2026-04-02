@@ -1,4 +1,4 @@
-﻿using GamingCatalogue.Models;
+using GamingCatalogue.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -8,10 +8,17 @@ public class ApplicationDbContext : DbContext
         : base(options)
     {
     }
+    public DbSet<Game> Games { get; set; }
+    public DbSet<Tag> Tags { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        modelBuilder.Entity<Tag>().HasData(
+            new Tag { Id = 1, Name = "Open World" },
+            new Tag { Id = 2, Name = "RPG" },
+            new Tag { Id = 3, Name = "First Person" },
+            new Tag { Id = 4, Name = "Action" }
+        );
         modelBuilder.Entity<Game>().HasData(
             new Game
             {
@@ -39,5 +46,5 @@ public class ApplicationDbContext : DbContext
             }
         );
     }
-    public DbSet<Game> Games { get; set; }
+
 }
