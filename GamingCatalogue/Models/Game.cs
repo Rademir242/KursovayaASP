@@ -18,5 +18,4 @@ namespace GamingCatalogue.Models
         public ICollection<Genre> Genres { get; set; } = new List<Genre>();
     }
 
-
 }
