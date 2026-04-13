@@ -7,50 +7,118 @@
 <div class="white-panel">
     <h1 class="text-center mb-4">Каталог игр</h1>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        @foreach (var game in Model.Games)
-        {
-            <div class="col">
-                <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-                    <img src="@game.ImageUrl" class="card-img-top" alt="@game.Title" style="height: 200px; object-fit: cover;">
-                    
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5 class="card-title mb-0">@game.Title</h5>
-                            <span class="badge bg-dark">@game.Year</span>
-                        </div>
-                        
-                        <p class="card-text text-muted" style="font-size: 0.9rem;">
-                            @if (game.Description.Length > 100)
+    <div class="row">
+        <div class="col-md-3">
+            <div class="p-3 border rounded shadow-sm bg-light" style="position: sticky; top: 20px;">
+                <h5 class="mb-3 text-success"><i class="bi bi-filter-square"></i> Фильтры</h5>
+                <form method="get">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Жанр</label>
+                        <select asp-for="SelectedGenre" class="form-select form-select-sm">
+                            <option value="">Все жанры</option>
+                            @foreach (var genre in Model.AllGenres)
                             {
-                                @(game.Description.Substring(0, 100) + "...")
+                                <option value="@genre.Name">@genre.Name</option>
                             }
-                            else
-                            {
-                                @game.Description
-                            }
-                        </p>
+                        </select>
                     </div>
 
-                    <div class="card-footer bg-transparent border-0 pb-3">
-                        <div class="d-flex justify-content-around text-center border-top pt-2" style="font-size: 0.8rem;">
-                            <div>
-                                <strong>Геймплей</strong><br />@game.GameplayScore
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Тег</label>
+                        <select asp-for="SelectedTag" class="form-select form-select-sm">
+                            <option value="">Все теги</option>
+                            @foreach (var tag in Model.AllTags)
+                            {
+                                <option value="@tag.Name">@tag.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <hr />
+
+                    @{
+                        var sliders = new[] {
+                                        new { Label = "Геймплей", Prop = "MinGameplay", Value = Model.MinGameplay },
+                                        new { Label = "Графика", Prop = "MinGraphics", Value = Model.MinGraphics },
+                                        new { Label = "Сюжет", Prop = "MinStory", Value = Model.MinStory },
+                                        new { Label = "Музыка", Prop = "MinMusic", Value = Model.MinMusic }
+                                        };
+                    }
+
+                    @foreach (var slider in sliders)
+                    {
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label small fw-bold">@slider.Label</label>
+                                <span class="badge bg-success">@(slider.Value ?? 0)</span>
                             </div>
-                            <div>
-                                <strong>Графика</strong><br />@game.GraphicsScore
+                            <input type="range" class="form-range"
+                                   min="0" max="10" step="1"
+                                   name="@slider.Prop" value="@(slider.Value ?? 0)"
+                                   oninput="this.previousElementSibling.querySelector('.badge').innerText = this.value">
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Применить</button>
+                        <a asp-page="/Index" class="btn btn-outline-secondary btn-sm">Сбросить</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var game in Model.Games)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+                            <img src="@game.ImageUrl" class="card-img-top" alt="@game.Title" style="height: 200px; object-fit: cover;">
+
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title mb-0">@game.Title</h5>
+                                    <span class="badge bg-dark">@game.Year</span>
+                                </div>
+
+                                <p class="card-text text-muted" style="font-size: 0.85rem; height: 3.6rem; overflow: hidden;">
+                                    @game.Description
+                                </p>
+
+                                <div class="py-2 border-top">
+                                    @if (game.Genres != null && game.Genres.Any())
+                                    {
+                                        foreach (var genre in game.Genres)
+                                        {
+                                            <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle me-1" style="font-size: 0.7rem;">
+                                                @genre.Name
+                                            </span>
+                                        }
+                                    }
+                                </div>
                             </div>
-                            <div>
-                                <strong>Сюжет</strong><br />@game.StoryScore
-                            </div>
-                                                        <div>
-                                <strong>Музыка</strong><br />@game.MusicScore
+
+                            <div class="card-footer bg-transparent border-0 pb-3">
+                                <div class="d-flex justify-content-around text-center border-top pt-2" style="font-size: 0.8rem;">
+                                    <div><strong>Геймплей</strong><br />@game.GameplayScore</div>
+                                    <div><strong>Графика</strong><br />@game.GraphicsScore</div>
+                                    <div><strong>Сюжет</strong><br />@game.StoryScore</div>
+                                    <div><strong>Музыка</strong><br />@game.MusicScore</div>
+                                </div>
+                                <a asp-page="/GameDetails" asp-route-id="@game.Id" class="btn btn-outline-success w-100 mt-3">Подробнее</a>
                             </div>
                         </div>
-                        <a asp-page="/GameDetails" asp-route-id="@game.Id" class="btn btn-outline-success w-100 mt-3">Подробнее</a>
                     </div>
-                </div>
+                }
             </div>
-        }
+
+            @if (!Model.Games.Any())
+            {
+                <div class="text-center mt-5">
+                    <h4 class="text-muted">Игры с такими параметрами не найдены :(</h4>
+                </div>
+            }
+        </div>
     </div>
 </div>
